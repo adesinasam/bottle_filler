@@ -1,6 +1,6 @@
-## Glistercp Hotel
+## Bottle Filler App
 
-Hotel Management App for ERPNext
+Bottle Filler App for distribution, wholesale and retail involve in selling refill product.
 
 #### License
 

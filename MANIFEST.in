@@ -4,15 +4,15 @@ include *.json
 include *.md
 include *.py
 include *.txt
-recursive-include glistercp_hotel *.css
-recursive-include glistercp_hotel *.csv
-recursive-include glistercp_hotel *.html
-recursive-include glistercp_hotel *.ico
-recursive-include glistercp_hotel *.js
-recursive-include glistercp_hotel *.json
-recursive-include glistercp_hotel *.md
-recursive-include glistercp_hotel *.png
-recursive-include glistercp_hotel *.py
-recursive-include glistercp_hotel *.svg
-recursive-include glistercp_hotel *.txt
-recursive-exclude glistercp_hotel *.pyc
+recursive-include bottle_filler *.css
+recursive-include bottle_filler *.csv
+recursive-include bottle_filler *.html
+recursive-include bottle_filler *.ico
+recursive-include bottle_filler *.js
+recursive-include bottle_filler *.json
+recursive-include bottle_filler *.md
+recursive-include bottle_filler *.png
+recursive-include bottle_filler *.py
+recursive-include bottle_filler *.svg
+recursive-include bottle_filler *.txt
+recursive-exclude bottle_filler *.pyc

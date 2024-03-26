@@ -4,13 +4,13 @@ from setuptools import setup, find_packages
 with open('requirements.txt') as f:
 	install_requires = f.read().strip().split('\n')
 
-# get version from __version__ variable in glistercp_hotel/__init__.py
-from glistercp_hotel import __version__ as version
+# get version from __version__ variable in bottle_filler/__init__.py
+from bottle_filler import __version__ as version
 
 setup(
-	name='glistercp_hotel',
+	name='bottle_filler',
 	version=version,
-	description='Hotel Management App for ERPNext',
+	description='Bottle Filler App',
 	author='Glistercp',
 	author_email='support@glistercp.com.ng',
 	packages=find_packages(),
