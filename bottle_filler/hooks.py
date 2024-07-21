@@ -18,8 +18,21 @@ fixtures = [{
   'dt' : 'Custom Field', 'filters':[
     [
       'name', 'in', [
-        'Sales Invoice-check_in_id',
-        'Sales Invoice-check_in_date',
+        'Item-has_empty_bottle',
+        'Item-empty_bottle_item',
+        'Item-allow_in_pos',
+        'Sales Invoice Item-has_empty_bottle',
+        'Sales Invoice Item-empty_bottle_item_code',
+        'Sales Invoice-empty_bottle_item_name',
+        'Sales Invoice-empty_bottle_qty',
+        'Sales Invoice-empty_bottle_rate',
+        'Sales Invoice-empty_bottle_amount',
+        'Purchase Invoice Item-has_empty_bottle',
+        'Purchase Invoice Item-empty_bottle_item_code',
+        'Purchase Invoice-empty_bottle_item_name',
+        'Purchase Invoice-empty_bottle_qty',
+        'Purchase Invoice-empty_bottle_rate',
+        'Purchase Invoice-empty_bottle_amount'
       ]
     ]
   ]
@@ -91,13 +104,15 @@ fixtures = [{
 # Hook on document methods and events
 
 doc_events = {
-  "Expense Entry": {
-    "on_submit": "expense_journal.api.setup",
-    "on_cancel": "expense_journal.apy.setup"
+  "Sales Invoice": {
+    "before_submit": "bottle_filler.api.setup",
+    "on_submit": "bottle_filler.api.setup",
+    "on_cancel": "bottle_filler.apy.setup"
   },
-  "Expense Entry": {
-    "on_submit": "expense_journal.api.setup",
-    "on_cancel": "expense_journal.apy.setup"
+  "Purchase Invoice": {
+    "before_save": "bottle_filler.api.setup",
+    "on_submit": "bottle_filler.api.setup",
+    "on_cancel": "bottle_filler.apy.setup"
   }
 }
 
