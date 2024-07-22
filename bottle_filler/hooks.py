@@ -38,6 +38,9 @@ fixtures = [{
   ]
 }]
 
+after_migrate = "bottle_filler.setup.install.after_install"
+after_install = "bottle_filler.setup.install.after_install"
+
 # include js, css files in header of desk.html
 # app_include_css = "/assets/bottle_filler/css/bottle_filler.css"
 # app_include_js = "/assets/bottle_filler/js/bottle_filler.js"
