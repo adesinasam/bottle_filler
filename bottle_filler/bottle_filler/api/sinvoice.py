@@ -13,3 +13,4 @@ from frappe.utils import flt, add_days
 def get_item_price(item_code, price_list):
     price = frappe.db.get_value("Item Price", {"item_code": item_code, "price_list": price_list}, "price_list_rate")
     return {"price_list_rate": price}
+

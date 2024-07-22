@@ -20,6 +20,7 @@ fixtures = [{
       'name', 'in', [
         'Item-has_empty_bottle',
         'Item-empty_bottle_item',
+        'Item-empty_bottle_item_name',
         'Item-allow_in_pos',
         'Sales Invoice Item-has_empty_bottle',
         'Sales Invoice Item-empty_bottle_item_code',
@@ -38,8 +39,8 @@ fixtures = [{
   ]
 }]
 
-after_migrate = "bottle_filler.setup.install.after_install"
-after_install = "bottle_filler.setup.install.after_install"
+# after_migrate = "bottle_filler.setup.install.after_install"
+# after_install = "bottle_filler.setup.install.after_install"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/bottle_filler/css/bottle_filler.css"
@@ -53,6 +54,10 @@ after_install = "bottle_filler.setup.install.after_install"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
+doctype_js = {
+    "Sales Invoice": "public/js/doctype_plugin/sales_invoice.js",
+    "Purchase Invoice": "public/js/doctype_plugin/Purchase_invoice.js",
+    }
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -105,6 +110,13 @@ after_install = "bottle_filler.setup.install.after_install"
 # Document Events
 # ---------------
 # Hook on document methods and events
+
+# doc_events = {
+#   "Expense Entry": {
+#     "on_submit": "expense_request.api.setup",
+#     "on_cancel": "expense_request.apy.setup"
+#   }
+# }
 
 
 # Scheduled Tasks
