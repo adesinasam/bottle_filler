@@ -50,6 +50,10 @@ fixtures = [{
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
+doctype_js = {
+    "Sales Invoice": "bottle_filler/api/sinvoice.js",
+    "Purchase Invoice": "bottle_filler/api/pinvoice.js",
+}
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -103,18 +107,6 @@ fixtures = [{
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-  "Sales Invoice": {
-    "before_submit": "bottle_filler.api.setup",
-    "on_submit": "bottle_filler.api.setup",
-    "on_cancel": "bottle_filler.apy.setup"
-  },
-  "Purchase Invoice": {
-    "before_save": "bottle_filler.api.setup",
-    "on_submit": "bottle_filler.api.setup",
-    "on_cancel": "bottle_filler.apy.setup"
-  }
-}
 
 # Scheduled Tasks
 # ---------------

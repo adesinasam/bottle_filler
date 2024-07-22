@@ -1,0 +1,374 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "BFE-POS-.YY.-.#####",
+ "creation": "2024-07-21 18:27:41.747595",
+ "doctype": "DocType",
+ "document_type": "Other",
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "warehouse",
+  "transaction_date",
+  "posting_date",
+  "posting_time",
+  "column_break_6",
+  "empty_item_code",
+  "empty_item_name",
+  "voucher_type",
+  "voucher_no",
+  "voucher_detail_no",
+  "pos_profile",
+  "section_break_11",
+  "actual_qty",
+  "price",
+  "amount",
+  "customer",
+  "column_break_17",
+  "empty_qty",
+  "empty_price",
+  "empty_amount",
+  "difference_in_qty",
+  "section_break_21",
+  "company",
+  "cost_center",
+  "territory",
+  "column_break_26",
+  "fiscal_year",
+  "is_cancelled",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item Code",
+   "oldfieldname": "item_code",
+   "oldfieldtype": "Link",
+   "options": "Item",
+   "print_width": "100px",
+   "read_only": 1,
+   "search_index": 1,
+   "width": "100px"
+  },
+  {
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Warehouse",
+   "oldfieldname": "warehouse",
+   "oldfieldtype": "Link",
+   "options": "Warehouse",
+   "print_width": "100px",
+   "read_only": 1,
+   "search_index": 1,
+   "width": "100px"
+  },
+  {
+   "fieldname": "transaction_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Transaction Date",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "oldfieldname": "posting_date",
+   "oldfieldtype": "Date",
+   "print_width": "100px",
+   "read_only": 1,
+   "search_index": 1,
+   "width": "100px"
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time",
+   "oldfieldname": "posting_time",
+   "oldfieldtype": "Time",
+   "print_width": "100px",
+   "read_only": 1,
+   "width": "100px"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "empty_item_code",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Empty Item Code",
+   "options": "Item",
+   "print_width": "100px",
+   "read_only": 1,
+   "width": "100px"
+  },
+  {
+   "fetch_from": "empty_item_code.item_name",
+   "fieldname": "empty_item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Empty Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_type",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "Voucher Type",
+   "oldfieldname": "voucher_type",
+   "oldfieldtype": "Data",
+   "options": "DocType",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "voucher_no",
+   "fieldtype": "Dynamic Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Voucher No",
+   "oldfieldname": "voucher_no",
+   "oldfieldtype": "Data",
+   "options": "voucher_type",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "voucher_detail_no",
+   "fieldtype": "Data",
+   "label": "Voucher Detail No",
+   "oldfieldname": "voucher_detail_no",
+   "oldfieldtype": "Data",
+   "print_width": "150px",
+   "read_only": 1,
+   "search_index": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "pos_profile",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "POS Profile",
+   "options": "POS Profile",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "actual_qty",
+   "fieldtype": "Float",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "label": "Actual Quantity",
+   "oldfieldname": "actual_qty",
+   "oldfieldtype": "Currency",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price",
+   "oldfieldname": "incoming_rate",
+   "oldfieldtype": "Currency",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "empty_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Empty Qty"
+  },
+  {
+   "fieldname": "empty_price",
+   "fieldtype": "Currency",
+   "label": "Empty Price",
+   "oldfieldname": "stock_value",
+   "oldfieldtype": "Currency",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "empty_amount",
+   "fieldtype": "Currency",
+   "label": "Empty Amount",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "difference_in_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Difference in Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_21",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "Company",
+   "oldfieldname": "company",
+   "oldfieldtype": "Data",
+   "options": "Company",
+   "print_width": "150px",
+   "read_only": 1,
+   "search_index": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "oldfieldname": "stock_uom",
+   "oldfieldtype": "Data",
+   "options": "Cost Center",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "label": "Territory",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "label": "Fiscal Year",
+   "oldfieldname": "fiscal_year",
+   "oldfieldtype": "Data",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_cancelled",
+   "fieldtype": "Check",
+   "label": "Is Cancelled",
+   "report_hide": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "POS Empty Bottle Entry",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "icon": "fa fa-list",
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-07-21 18:32:09.952758",
+ "modified_by": "Administrator",
+ "module": "Bottle Filler",
+ "name": "POS Empty Bottle Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}
