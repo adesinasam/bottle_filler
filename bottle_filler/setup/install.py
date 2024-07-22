@@ -15,9 +15,9 @@ def set_custom_scripts():
 
     CS.set("enabled", 1)
     CS.set("view", "Form")
-    CS.set("dt", "Sales Invoic")
+    CS.set("dt", "Sales Invoice")
     CS.set("script", """
-frappe.ui.form.on('Sales Invoic', {
+frappe.ui.form.on('Sales Invoice', {
     refresh(frm) {
         //refresh
 	}
