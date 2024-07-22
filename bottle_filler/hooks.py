@@ -39,8 +39,6 @@ fixtures = [{
   ]
 }]
 
-# after_migrate = "bottle_filler.setup.install.after_install"
-# after_install = "bottle_filler.setup.install.after_install"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/bottle_filler/css/bottle_filler.css"
@@ -87,7 +85,9 @@ doctype_js = {
 # ------------
 
 # before_install = "bottle_filler.install.before_install"
-# after_install = "bottle_filler.install.after_install"
+# after_migrate = "bottle_filler.setup.install.after_install"
+# after_install = "bottle_filler.setup.install.after_install"
+after_uninstall = "bottle_filler.setup.uninstall.after_uninstall"
 
 # Desk Notifications
 # ------------------
