@@ -3,12 +3,12 @@ from frappe import _
 from frappe import utils
 
 
-def setup(sales_invoice, method):
+def setup(sales_invoice):
 
     invoice_items = []
     
     for detail in sales_invoice.items:
-        # if detail.has_empty_bottle and not detail.allow_is_pos:
+        if hasattr(detail, 'has_empty_bottle') and not hasattr(detail, 'allow_is_pos'):
             invoice_items.append(detail)
 
             sales_invoice.items = invoice_items
@@ -70,33 +70,33 @@ def make_stock_entry(sales_invoice):
         se.submit()
 
         # create the stock entry
-        # for detail in sales_invoice.items:            
-        #     ebe = frappe.get_doc({
-        #         'doctype': 'Empty Bottle Entry',
-        #         'item_code': detail.item_code,
-        #         'item_name': detail.item_name,
-        #         'warehouse': detail.warehouse,
-        #         'posting_date': sales_invoice.posting_date,
-        #         'posting_time': sales_invoice.posting_time,
-        #         'empty_item_code': detail.empty_item_code,
-        #         'empty_item_name': detail.empty_item_name,
-        #         'voucher_type': 'Sales Invoice',
-        #         'voucher_no': sales_invoice.name,
-        #         'actual_qty': detail.qty,
-        #         'price': float(detail.rate),
-        #         'amount': float(detail.amount),
-        #         'customer': sales_invoice.set_warehouse,
-        #         'empty_qty': detail.empty_bottle_qty,
-        #         'empty_price': float(detail.empty_bottle_rate),
-        #         'empty_amount': float(detail.empty_bottle_amount),
-        #         'difference_in_qty': detail.qty - detail.empty_bottle_qty,
-        #         'company': sales_invoice.company,
-        #         'cost_center': detail.cost_center,
-        #         'territory': sales_invoice.territory
-        #     })
+        for detail in sales_invoice.items:            
+            ebe = frappe.get_doc({
+                'doctype': 'Empty Bottle Entry',
+                'item_code': detail.item_code,
+                'item_name': detail.item_name,
+                'warehouse': detail.warehouse,
+                'posting_date': sales_invoice.posting_date,
+                'posting_time': sales_invoice.posting_time,
+                'empty_item_code': detail.empty_item_code,
+                'empty_item_name': detail.empty_item_name,
+                'voucher_type': 'Sales Invoice',
+                'voucher_no': sales_invoice.name,
+                'actual_qty': detail.qty,
+                'price': float(detail.rate),
+                'amount': float(detail.amount),
+                'customer': sales_invoice.set_warehouse,
+                'empty_qty': detail.empty_bottle_qty,
+                'empty_price': float(detail.empty_bottle_rate),
+                'empty_amount': float(detail.empty_bottle_amount),
+                'difference_in_qty': detail.qty - detail.empty_bottle_qty,
+                'company': sales_invoice.company,
+                'cost_center': detail.cost_center,
+                'territory': sales_invoice.territory
+            })
 
 
-        #     ebe.insert()
+            ebe.insert()
     
     elif sales_invoice.docstatus == 2:
 
@@ -105,7 +105,7 @@ def make_stock_entry(sales_invoice):
         pr = frappe.get_doc("Stock Entry", pr_name)
         pr.cancel()
 
-        # for detail in sales_invoice.items:            
+        for detail in sales_invoice.items:            
             ebe = frappe.get_doc({
                 'doctype': 'Empty Bottle Entry',
                 'is_cancelled': 1
