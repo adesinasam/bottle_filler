@@ -111,12 +111,12 @@ after_uninstall = "bottle_filler.setup.uninstall.after_uninstall"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#   "Expense Entry": {
-#     "on_submit": "expense_request.api.setup",
-#     "on_cancel": "expense_request.apy.setup"
-#   }
-# }
+doc_events = {
+  "Sales Invoice": {
+    "on_submit": "bottle_filler.api.setup",
+    "on_cancel": "bottle_filler.api.setup"
+  }
+}
 
 
 # Scheduled Tasks
