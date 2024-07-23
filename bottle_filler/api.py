@@ -8,7 +8,7 @@ def setup(sales_invoice, method):
     invoice_items = []
     
     for detail in sales_invoice.items:
-        # if hasattr(detail, 'has_empty_bottle') and not hasattr(detail, 'allow_is_pos'):
+        if hasattr(detail, 'empty_bottle_item_code') and not hasattr(detail, 'allow_is_pos'):
             invoice_items.append(detail)
 
     sales_invoice.items = invoice_items
