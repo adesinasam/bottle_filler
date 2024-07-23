@@ -23,7 +23,7 @@ def setup(sales_invoice, method):
 
 def make_stock_entry(sales_invoice):
 
-    if sales_invoice.docstatus == 1:         
+    # if sales_invoice.docstatus == 1:         
 
         # check for duplicates
         if frappe.db.exists({'doctype': 'Stock Entry', 'salesinvoiceno': sales_invoice.name}):
@@ -42,7 +42,11 @@ def make_stock_entry(sales_invoice):
             items.append({  
                 't_warehouse': detail.warehouse,
                 'item_code': detail.empty_bottle_item_code,
-                'qty': detail.invoice_account,
+                'qty': detail.qty,
+                'transfer_qty': detail.qty,
+                'uom': detail.uom,
+                'stock_uom': detail.stock_uom,
+                'conversion_factor': detail.conversion_factor,
                 'basic_rate': float(detail.empty_bottle_rate),
                 'project': detail.project,
                 'cost_center': detail.cost_center
@@ -98,18 +102,18 @@ def make_stock_entry(sales_invoice):
 
             ebe.insert()
     
-    elif sales_invoice.docstatus == 2:
+    # elif sales_invoice.docstatus == 2:
 
-        pr_name = frappe.db.get_value("Stock Entry",{"salesinvoiceno": sales_invoice.name}, "name")
+    #     pr_name = frappe.db.get_value("Stock Entry",{"salesinvoiceno": sales_invoice.name}, "name")
         
-        pr = frappe.get_doc("Stock Entry", pr_name)
-        pr.cancel()
+    #     pr = frappe.get_doc("Stock Entry", pr_name)
+    #     pr.cancel()
 
-        for detail in sales_invoice.items:            
-            ebe = frappe.get_doc({
-                'doctype': 'Empty Bottle Entry',
-                'is_cancelled': 1
-            })
+    #     for detail in sales_invoice.items:            
+    #         ebe = frappe.get_doc({
+    #             'doctype': 'Empty Bottle Entry',
+    #             'is_cancelled': 1
+    #         })
 
 
-            ebe.save()
+    #         ebe.save()
