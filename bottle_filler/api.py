@@ -26,8 +26,8 @@ def make_stock_entry(sales_invoice):
             items.append({
                 't_warehouse': detail.warehouse,
                 'item_code': detail.empty_bottle_item_code,
-                'qty': detail.qty,
-                'transfer_qty': detail.qty,
+                'qty': detail.empty_bottle_qty,
+                'transfer_qty': detail.empty_bottle_qty,
                 'uom': detail.uom,
                 'stock_uom': detail.stock_uom,
                 'conversion_factor': detail.conversion_factor,
@@ -43,7 +43,6 @@ def make_stock_entry(sales_invoice):
         )
 
     se = frappe.get_doc({
-        'title': "Auto Material Receipt",
         'doctype': 'Stock Entry',
         'stock_entry_type': 'Material Receipt',
         'purpose': 'Material Receipt',
@@ -59,3 +58,31 @@ def make_stock_entry(sales_invoice):
 
     se.insert()
     se.submit()
+
+    # create the stock entry
+    for detail in sales_invoice.items:            
+        btl = frappe.get_doc({
+            'doctype': 'Empty Bottle Entry',
+            'item_code': detail.item_code,
+            'item_name': detail.item_name,
+            'warehouse': detail.warehouse,
+            'posting_date': sales_invoice.posting_date,
+            'posting_time': sales_invoice.posting_time,
+            'empty_item_code': detail.empty_item_code,
+            'empty_item_name': detail.empty_item_name,
+            'voucher_type': 'Sales Invoice',
+            'voucher_no': sales_invoice.name,
+            'actual_qty': detail.qty,
+            'price': float(detail.rate),
+            'amount': float(detail.amount),
+            'customer': sales_invoice.set_warehouse,
+            'empty_qty': detail.empty_bottle_qty,
+            'empty_price': float(detail.empty_bottle_rate),
+            'empty_amount': float(detail.empty_bottle_amount),
+            'difference_in_qty': detail.qty - detail.empty_bottle_qty,
+            'company': sales_invoice.company,
+            'cost_center': detail.cost_center,
+            'territory': sales_invoice.territory
+        })
+
+        btl.insert()
