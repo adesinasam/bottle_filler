@@ -8,7 +8,7 @@ def setup(sales_invoice, method):
     invoice_items = []
     
     for detail in sales_invoice.items:
-        if detail.has_empty_bottle and not detail.allow_is_pos:
+        if hasattr(detail, 'has_empty_bottle') and not hasattr(detail, 'allow_is_pos'):
             invoice_items.append(detail)
 
     sales_invoice.items = invoice_items
@@ -29,7 +29,7 @@ def make_stock_entry(sales_invoice):
         if frappe.db.exists({'doctype': 'Stock Entry', 'salesinvoiceno': sales_invoice.name}):
             frappe.throw(
                 title="Error",
-                msg="Stock Entry for Invoice {} already exists.".format(sales_invoice.name)
+                msg="Stock Entry for Invoice {} already exists.".format(sales_invoice.items)
             )
 
 
