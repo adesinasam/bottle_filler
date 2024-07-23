@@ -11,14 +11,14 @@ def setup(sales_invoice, method):
         if hasattr(detail, 'has_empty_bottle') and not hasattr(detail, 'allow_is_pos'):
             invoice_items.append(detail)
 
-            sales_invoice.items = invoice_items
-            make_stock_entry(sales_invoice)
+    sales_invoice.items = invoice_items
+    make_stock_entry(sales_invoice)
 
-        if hasattr(detail, 'has_empty_bottle') and hasattr(detail, 'allow_is_pos'):
-            invoice_items.append(detail)
+        # if hasattr(detail, 'has_empty_bottle') and hasattr(detail, 'allow_is_pos'):
+        #     invoice_items.append(detail)
 
-            sales_invoice.items = invoice_items
-            make_pos_empty_entry(sales_invoice)
+        #     sales_invoice.items = invoice_items
+        #     make_pos_empty_entry(sales_invoice)
 
 
 def make_stock_entry(sales_invoice):
