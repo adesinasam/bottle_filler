@@ -191,6 +191,7 @@ def make_pos_entry(sales_invoice):
                     })
                     # Insert the document into the database
                     btl.insert()
+                    btl.save()
                 except Exception as e:
                     frappe.log_error(frappe.get_traceback(), f"Failed to create POS Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
                     frappe.throw(_("Failed to create POS Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
