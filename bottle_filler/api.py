@@ -10,9 +10,11 @@ def setup(sales_invoice, method):
         sales_invoice: The Sales Invoice document object.
         method: The method triggering this function.
     """
-    invoice_items = []
+    # Make a copy of the original sales invoice object
+    initial_sales_invoice = sales_invoice.copy()
     
     # Filter items that have 'empty_bottle_item_code' and no 'allow_is_pos' attribute
+    invoice_items = []
     for detail in sales_invoice.items:
         if hasattr(detail, 'empty_bottle_item_code') and detail.empty_bottle_item_code and not hasattr(detail, 'allow_is_pos'):
             invoice_items.append(detail)
@@ -23,6 +25,9 @@ def setup(sales_invoice, method):
     # Create stock entry if there are items in the filtered list
     if invoice_items:
         make_stock_entry(sales_invoice)
+
+    # Return the initial sales invoice object
+    return initial_sales_invoice
 
 def make_stock_entry(sales_invoice):
     """
