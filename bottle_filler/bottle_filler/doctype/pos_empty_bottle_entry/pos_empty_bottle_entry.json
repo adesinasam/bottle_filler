@@ -13,12 +13,13 @@
   "transaction_date",
   "posting_date",
   "posting_time",
+  "set_posting_time",
   "column_break_6",
   "empty_item_code",
   "empty_item_name",
+  "stock_entry_no",
   "voucher_type",
   "voucher_no",
-  "voucher_detail_no",
   "pos_profile",
   "section_break_11",
   "actual_qty",
@@ -41,6 +42,7 @@
  ],
  "fields": [
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "item_code",
    "fieldtype": "Link",
    "in_filter": 1,
@@ -56,6 +58,7 @@
    "width": "100px"
   },
   {
+   "allow_in_quick_entry": 1,
    "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
@@ -64,6 +67,7 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "warehouse",
    "fieldtype": "Link",
    "in_filter": 1,
@@ -86,6 +90,7 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -95,18 +100,21 @@
    "oldfieldname": "posting_date",
    "oldfieldtype": "Date",
    "print_width": "100px",
-   "read_only": 1,
+   "read_only_depends_on": "!set_posting_time",
+   "reqd": 1,
    "search_index": 1,
    "width": "100px"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "posting_time",
    "fieldtype": "Time",
    "label": "Posting Time",
    "oldfieldname": "posting_time",
    "oldfieldtype": "Time",
    "print_width": "100px",
-   "read_only": 1,
+   "read_only_depends_on": "!set_posting_time",
+   "reqd": 1,
    "width": "100px"
   },
   {
@@ -126,6 +134,7 @@
    "width": "100px"
   },
   {
+   "allow_in_quick_entry": 1,
    "fetch_from": "empty_item_code.item_name",
    "fieldname": "empty_item_name",
    "fieldtype": "Data",
@@ -160,17 +169,6 @@
    "width": "150px"
   },
   {
-   "fieldname": "voucher_detail_no",
-   "fieldtype": "Data",
-   "label": "Voucher Detail No",
-   "oldfieldname": "voucher_detail_no",
-   "oldfieldtype": "Data",
-   "print_width": "150px",
-   "read_only": 1,
-   "search_index": 1,
-   "width": "150px"
-  },
-  {
    "fieldname": "pos_profile",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -183,6 +181,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "actual_qty",
    "fieldtype": "Float",
    "in_filter": 1,
@@ -224,10 +223,12 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "empty_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Empty Qty"
+   "label": "Empty Qty",
+   "reqd": 1
   },
   {
    "fieldname": "empty_price",
@@ -316,20 +317,36 @@
    "options": "POS Empty Bottle Entry",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "set_posting_time",
+   "fieldtype": "Check",
+   "label": "Edit Posting Date and Time"
+  },
+  {
+   "fieldname": "stock_entry_no",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "label": "Stock Entry No",
+   "options": "Stock Entry",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
   }
  ],
  "icon": "fa fa-list",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-21 18:32:09.952758",
+ "modified": "2024-07-24 11:04:35.906994",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "POS Empty Bottle Entry",
  "owner": "Administrator",
  "permissions": [
   {
-   "create": 1,
    "export": 1,
    "print": 1,
    "read": 1,
@@ -340,7 +357,6 @@
   },
   {
    "amend": 1,
-   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -354,7 +370,6 @@
   {
    "amend": 1,
    "cancel": 1,
-   "create": 1,
    "export": 1,
    "read": 1,
    "report": 1,
@@ -367,6 +382,7 @@
    "role": "All"
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1,

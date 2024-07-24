@@ -123,7 +123,7 @@ def make_stock_entry(sales_invoice):
                         'empty_qty': detail.empty_bottle_qty if not sales_invoice.is_pos else detail.qty,
                         'empty_price': float(detail.empty_bottle_rate),
                         'empty_amount': float(detail.empty_bottle_amount),
-                        'difference_in_qty': detail.qty - detail.empty_bottle_qty,
+                        'difference_in_qty': detail.qty - detail.empty_bottle_qty if not sales_invoice.is_pos else detail.qty,
                         'company': sales_invoice.company,
                         'status': 'Submitted',
                         'cost_center': detail.cost_center,
@@ -155,7 +155,7 @@ def make_stock_entry(sales_invoice):
 
 def make_pos_entry(sales_invoice):
     """
-    Creates stock entries for the items in the sales invoice with empty bottles.
+    Creates pos empty bottle entries for the items in the sales invoice with allow empty bottles.
     
     Args:
         sales_invoice: The Sales Invoice document object.
@@ -163,53 +163,51 @@ def make_pos_entry(sales_invoice):
     if sales_invoice.docstatus == 1:         
 
         for detail in sales_invoice.items:            
-            if detail.empty_bottle_item_code:
+            if detail.empty_bottle_item_code and detail.allow_is_pos:
                 try:
                     # Create a new Empty Bottle Entry document
                     btl = frappe.get_doc({
-                        'doctype': 'Empty Bottle Entry',
+                        'doctype': 'POS Empty Bottle Entry',
                         'item_code': detail.item_code,
                         'item_name': detail.item_name,
                         'warehouse': detail.warehouse,
+                        'transaction_date': sales_invoice.posting_date,
                         'posting_date': sales_invoice.posting_date,
                         'posting_time': sales_invoice.posting_time,
                         'empty_item_code': detail.empty_bottle_item_code,
                         'empty_item_name': detail.empty_bottle_item_name,
                         'voucher_type': 'Sales Invoice',
                         'voucher_no': sales_invoice.name,
-                        'stock_entry_no': se.name,
+                        'pos_profile': sales_invoice.pos_profile,
                         'actual_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'customer': sales_invoice.customer,
-                        'empty_qty': detail.empty_bottle_qty,
-                        'empty_price': float(detail.empty_bottle_rate),
-                        'empty_amount': float(detail.empty_bottle_amount),
-                        'difference_in_qty': detail.qty - detail.empty_bottle_qty,
+                        'empty_qty': 0,
+                        'difference_in_qty': detail.qty,
                         'company': sales_invoice.company,
-                        'status': 'Submitted',
                         'cost_center': detail.cost_center,
                         'territory': sales_invoice.territory
                     })
                     # Insert the document into the database
                     btl.insert()
                 except Exception as e:
-                    frappe.log_error(frappe.get_traceback(), f"Failed to create Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
-                    frappe.throw(_("Failed to create Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
+                    frappe.log_error(frappe.get_traceback(), f"Failed to create POS Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
+                    frappe.throw(_("Failed to create POS Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
 
-    elif sales_invoice.docstatus == 2:
-        # Fetch all Empty Bottle Entry names matching the criteria
-        pr_names = frappe.get_all("Empty Bottle Entry", 
-            filters={"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, 
-            fields=["name"]
-        )
-        # Iterate over each entry and update fields
-        for entry in pr_names:
-            pr_name = entry.name
-            if pr_name:
-                # Fetch the Empty Bottle Entry document using the retrieved name
-                btl = frappe.get_doc('Empty Bottle Entry', pr_name)
+    # elif sales_invoice.docstatus == 2:
+    #     # Fetch all Empty Bottle Entry names matching the criteria
+    #     pr_names = frappe.get_all("Empty Bottle Entry", 
+    #         filters={"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, 
+    #         fields=["name"]
+    #     )
+    #     # Iterate over each entry and update fields
+    #     for entry in pr_names:
+    #         pr_name = entry.name
+    #         if pr_name:
+    #             # Fetch the Empty Bottle Entry document using the retrieved name
+    #             btl = frappe.get_doc('Empty Bottle Entry', pr_name)
 
-                # Set the stock_entry_no field and the status to 'Cancelled'
-                btl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
-                btl.db_set('is_cancelled', 1)  # Mark the document as cancelled
+    #             # Set the stock_entry_no field and the status to 'Cancelled'
+    #             btl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
+    #             btl.db_set('is_cancelled', 1)  # Mark the document as cancelled
