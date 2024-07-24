@@ -123,7 +123,7 @@ def make_stock_entry(sales_invoice):
                         'empty_qty': detail.empty_bottle_qty if not sales_invoice.is_pos else detail.qty,
                         'empty_price': float(detail.empty_bottle_rate),
                         'empty_amount': float(detail.empty_bottle_amount),
-                        'difference_in_qty': detail.qty - detail.empty_bottle_qty if not sales_invoice.is_pos else detail.qty,
+                        'difference_in_qty': detail.qty - (detail.empty_bottle_qty if not sales_invoice.is_pos else detail.qty),
                         'company': sales_invoice.company,
                         'status': 'Submitted',
                         'cost_center': detail.cost_center,
