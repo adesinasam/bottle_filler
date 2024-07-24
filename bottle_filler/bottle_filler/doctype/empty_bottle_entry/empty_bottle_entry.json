@@ -213,8 +213,10 @@
    "default": "0",
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
+   "in_filter": 1,
    "in_list_view": 1,
    "label": "Is Cancelled",
+   "read_only": 1,
    "report_hide": 1
   },
   {
@@ -333,9 +335,10 @@
  ],
  "hide_toolbar": 1,
  "icon": "fa fa-list",
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-24 04:42:31.181871",
+ "modified": "2024-07-24 05:10:31.294790",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",
