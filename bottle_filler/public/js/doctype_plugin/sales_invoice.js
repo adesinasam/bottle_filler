@@ -33,14 +33,14 @@ frappe.ui.form.on("Sales Invoice Item", {
     },
     item_code: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.has_empty_bottle && !row.allow_in_pos && !doc.is_pos) {
+        if (row.has_empty_bottle && !row.allow_in_pos && !frm.doc.is_pos) {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', 1);
         refresh_field("empty_bottle_qty", row.name);
         }
     },
     qty: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.has_empty_bottle && !row.allow_in_pos && !doc.is_pos) {
+        if (row.has_empty_bottle && !row.allow_in_pos && !frm.doc.is_pos) {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', row.qty);
         refresh_field("empty_bottle_qty", row.name);
         }
