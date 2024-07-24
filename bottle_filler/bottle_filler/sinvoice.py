@@ -22,7 +22,7 @@ def setup(sales_invoice, method):
         # Filter items based on conditions
         for detail in sales_invoice.items:
             if detail.empty_bottle_item_code:
-                if not detail.allow_is_pos:
+                if not detail.allow_in_pos:
                     invoice_items.append(detail)
                 else:
                     posinv_items.append(detail)
@@ -163,10 +163,10 @@ def make_pos_entry(sales_invoice):
     if sales_invoice.docstatus == 1:         
 
         for detail in sales_invoice.items:            
-            if detail.empty_bottle_item_code and detail.allow_is_pos:
+            if detail.empty_bottle_item_code and detail.allow_in_pos:
                 try:
                     # Create a new Empty Bottle Entry document
-                    pbtl = frappe.get_doc({
+                    btl = frappe.get_doc({
                         'doctype': 'POS Empty Bottle Entry',
                         'item_code': detail.item_code,
                         'item_name': detail.item_name,
@@ -190,8 +190,8 @@ def make_pos_entry(sales_invoice):
                         'territory': sales_invoice.territory
                     })
                     # Insert the document into the database
-                    pbtl.insert()
-                    pbtl.save()
+                    btl.insert()
+                    btl.save()
                 except Exception as e:
                     frappe.log_error(frappe.get_traceback(), f"Failed to create POS Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
                     frappe.throw(_("Failed to create POS Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
