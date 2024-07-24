@@ -114,7 +114,11 @@ def make_stock_entry(sales_invoice):
                     frappe.throw(_("Failed to create Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
 
     elif sales_invoice.docstatus == 2:
-        pr_name = frappe.db.get_value("Empty Bottle Entry", {"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, "name")
+        # Fetch all Empty Bottle Entry names matching the criteria
+        pr_names = frappe.get_all("Empty Bottle Entry", 
+            filters={"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, 
+            fields=["name"]
+        )
         # Iterate over each entry and update fields
         for entry in pr_names:
             pr_name = entry.name
