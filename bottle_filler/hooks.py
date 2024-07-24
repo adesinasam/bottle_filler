@@ -113,8 +113,8 @@ after_uninstall = "bottle_filler.setup.uninstall.after_uninstall"
 
 doc_events = {
   "Sales Invoice": {
-    "on_submit": "bottle_filler.api.setup",
-    "on_cancel": "bottle_filler.api.setup"
+    "on_submit": "bottle_filler.bottle_filler.sinvoice.setup",
+    "on_cancel": "bottle_filler.bottle_filler.sinvoice.setup"
   }
 }
 

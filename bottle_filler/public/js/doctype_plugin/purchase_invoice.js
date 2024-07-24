@@ -4,14 +4,13 @@ frappe.ui.form.on('Purchase Invoice', {
     }
 })
 
-// bottle_filler/api/sinvoice.js
 frappe.ui.form.on("Purchase Invoice Item", {
     empty_bottle_qty: function(frm, cdt, cdn) {
         var d = locals[cdt][cdn];
 
         // Fetch item price and calculate empty bottle amount
         frappe.call({
-            method: "bottle_filler.bottle_filler.api.sinvoice.get_item_price",
+            method: "bottle_filler.bottle_filler.api.get_item_price",
             args: {
                 item_code: d.empty_bottle_item_code,
                 price_list: "Standard Buying"
