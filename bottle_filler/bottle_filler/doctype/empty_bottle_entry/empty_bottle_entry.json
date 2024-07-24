@@ -36,6 +36,7 @@
   "territory",
   "column_break_26",
   "fiscal_year",
+  "status",
   "is_cancelled"
  ],
  "fields": [
@@ -316,13 +317,25 @@
    "print_width": "150px",
    "read_only": 1,
    "width": "150px"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Submitted\nCancelled",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
   }
  ],
  "hide_toolbar": 1,
  "icon": "fa fa-list",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-24 04:10:33.259209",
+ "modified": "2024-07-24 04:42:31.181871",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",

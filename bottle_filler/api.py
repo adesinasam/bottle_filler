@@ -103,6 +103,7 @@ def make_stock_entry(sales_invoice):
                         'empty_amount': float(detail.empty_bottle_amount),
                         'difference_in_qty': detail.qty - detail.empty_bottle_qty,
                         'company': sales_invoice.company,
+                        'status': 'Submitted',
                         'cost_center': detail.cost_center,
                         'territory': sales_invoice.territory
                     })
@@ -115,9 +116,9 @@ def make_stock_entry(sales_invoice):
     elif sales_invoice.docstatus == 2:
         pr_name = frappe.db.get_value("Empty Bottle Entry", {"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, "name")
         if pr_name:
-            btl = frappe.get_doc({
-                'doctype': 'Empty Bottle Entry',
-                'name': pr_name,
-                'is_cancelled': 1
-            })
-            btl.save()
+            # Fetch the Empty Bottle Entry document using the retrieved name
+            btl = frappe.get_doc('Empty Bottle Entry', pr_name)
+            
+            # Set the stock_entry_no field and the status to 'Cancelled'
+            btl.db_set('status', 'Cancelled')
+            btl.db_set('is_cancelled', 1)
