@@ -131,6 +131,3 @@ def make_stock_entry(sales_invoice):
                 btl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
                 btl.db_set('is_cancelled', 1)  # Mark the document as cancelled
 
-                # Save the changes
-                btl.save()
-
