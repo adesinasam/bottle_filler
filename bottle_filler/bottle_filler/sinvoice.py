@@ -62,12 +62,25 @@ def make_stock_entry(sales_invoice):
 
         items = []
         for detail in sales_invoice.items:
-            if detail.empty_bottle_item_code:
+            if detail.empty_bottle_item_code and not detail.is_pos:
                 items.append({
                     't_warehouse': detail.warehouse,
                     'item_code': detail.empty_bottle_item_code,
                     'qty': detail.empty_bottle_qty,
                     'transfer_qty': detail.empty_bottle_qty,
+                    'uom': detail.uom,
+                    'stock_uom': detail.stock_uom,
+                    'conversion_factor': detail.conversion_factor,
+                    'basic_rate': float(detail.empty_bottle_rate),
+                    'project': detail.project,
+                    'cost_center': detail.cost_center
+                })
+            if detail.empty_bottle_item_code and detail.is_pos:
+                items.append({
+                    't_warehouse': detail.warehouse,
+                    'item_code': detail.empty_bottle_item_code,
+                    'qty': detail.qty,
+                    'transfer_qty': detail.qty,
                     'uom': detail.uom,
                     'stock_uom': detail.stock_uom,
                     'conversion_factor': detail.conversion_factor,
