@@ -112,15 +112,14 @@ def make_stock_entry(purchase_invoice):
                         'actual_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
-                        'customer': purchase_invoice.customer,
+                        'supplier': purchase_invoice.supplier,
                         'empty_qty': detail.empty_bottle_qty,
                         'empty_price': float(detail.empty_bottle_rate),
                         'empty_amount': float(detail.empty_bottle_amount),
                         'difference_in_qty': detail.qty - detail.empty_bottle_qty,
                         'company': purchase_invoice.company,
                         'status': 'Submitted',
-                        'cost_center': detail.cost_center,
-                        'territory': purchase_invoice.territory
+                        'cost_center': detail.cost_center
                     })
                     # Insert the document into the database
                     btl.insert()
