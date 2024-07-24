@@ -1,6 +1,5 @@
 import frappe
 from frappe import _
-import copy
 from frappe import utils
 
 def setup(sales_invoice, method):
@@ -16,8 +15,9 @@ def setup(sales_invoice, method):
     """
     try:
         # Lists to hold filtered items
+        all_items = sales_invoice.items[:]
         invoice_items = []
-        invoices_items = []
+        posinv_items = []
 
         # Filter items based on conditions
         for detail in sales_invoice.items:
@@ -25,16 +25,19 @@ def setup(sales_invoice, method):
                 if not hasattr(detail, 'allow_is_pos'):
                     invoice_items.append(detail)
                 else:
-                    invoices_items.append(detail)
+                    posinv_items.append(detail)
 
         # Update sales invoice items based on the filters
         if invoice_items:
             sales_invoice.items = invoice_items
             make_stock_entry(sales_invoice)
     
-        if invoices_items:
-            sales_invoice.items = invoices_items
+        if posinv_items:
+            sales_invoice.items = posinv_items
             make_pos_entry(sales_invoice)
+
+        # Restore original items
+        sales_invoice.items = all_items
 
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), _("Error in setup function"))
