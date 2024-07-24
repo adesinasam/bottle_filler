@@ -1,6 +1,12 @@
 frappe.ui.form.on('Purchase Invoice', {
-    refresh(frm) {
-        //refresh
+    validate: function(frm) {
+        $.each(frm.doc.items || [], function(i, item) {
+            if (item.has_empty_bottle && !item.allow_in_pos && item.empty_bottle_qty===0) {
+                frappe.msgprint(__('Row #{0}: Empty Bottle Quantity cannot be zero.', [item.idx]));
+                frappe.validated = false;
+                return false;
+            }
+        });
     }
 })
 

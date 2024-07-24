@@ -115,6 +115,10 @@ doc_events = {
   "Sales Invoice": {
     "on_submit": "bottle_filler.bottle_filler.sinvoice.setup",
     "on_cancel": "bottle_filler.bottle_filler.sinvoice.setup"
+  },
+  "Purchase Invoice": {
+    "on_submit": "bottle_filler.bottle_filler.pinvoice.setup",
+    "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
   }
 }
 
