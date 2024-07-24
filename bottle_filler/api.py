@@ -127,7 +127,5 @@ def make_stock_entry(sales_invoice):
                 btl = frappe.get_doc('Empty Bottle Entry', pr_name)
 
                 # Set the stock_entry_no field and the status to 'Cancelled'
-                btl.db_set('stock_entry_no', se.name)  # Update the stock entry number
                 btl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
                 btl.db_set('is_cancelled', 1)  # Mark the document as cancelled
-
