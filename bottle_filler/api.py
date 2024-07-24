@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+import copy
 from frappe import utils
 
 def setup(sales_invoice, method):
@@ -10,21 +11,26 @@ def setup(sales_invoice, method):
         sales_invoice: The Sales Invoice document object.
         method: The method triggering this function.
     """
-    # Make a copy of the original sales invoice object
-    initial_sales_invoice = sales_invoice.copy()
-    
-    # Filter items that have 'empty_bottle_item_code' and no 'allow_is_pos' attribute
-    invoice_items = []
-    for detail in sales_invoice.items:
-        if hasattr(detail, 'empty_bottle_item_code') and detail.empty_bottle_item_code and not hasattr(detail, 'allow_is_pos'):
-            invoice_items.append(detail)
+    try:
+        # Make a deep copy of the original sales invoice object
+        initial_sales_invoice = copy.deepcopy(sales_invoice)
+        
+        # Filter items that have 'empty_bottle_item_code' and no 'allow_is_pos' attribute
+        invoice_items = []
+        for detail in sales_invoice.items:
+            if hasattr(detail, 'empty_bottle_item_code') and detail.empty_bottle_item_code and not hasattr(detail, 'allow_is_pos'):
+                invoice_items.append(detail)
 
-    # Update sales invoice items to filtered list
-    sales_invoice.items = invoice_items
-    
-    # Create stock entry if there are items in the filtered list
-    if invoice_items:
-        make_stock_entry(sales_invoice)
+        # Update sales invoice items to filtered list
+        sales_invoice.items = invoice_items
+        
+        # Create stock entry if there are items in the filtered list
+        if invoice_items:
+            make_stock_entry(sales_invoice)
+
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), _("Error in setup function"))
+        frappe.throw(_("An error occurred during setup: {0}").format(str(e)))
 
     # Return the initial sales invoice object
     return initial_sales_invoice
