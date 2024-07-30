@@ -117,6 +117,7 @@ def make_stock_entry(sales_invoice):
                         'voucher_no': sales_invoice.name,
                         'stock_entry_no': se.name,
                         'actual_qty': detail.qty,
+                        'in_empty_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'customer': sales_invoice.customer,

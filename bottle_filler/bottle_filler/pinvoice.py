@@ -57,7 +57,7 @@ def make_stock_entry(purchase_invoice):
         for detail in purchase_invoice.items:
             if detail.empty_bottle_item_code:
                 items.append({
-                    't_warehouse': detail.warehouse,
+                    's_warehouse': detail.warehouse,
                     'item_code': detail.empty_bottle_item_code,
                     'qty': detail.empty_bottle_qty,
                     'transfer_qty': detail.empty_bottle_qty,
@@ -78,8 +78,8 @@ def make_stock_entry(purchase_invoice):
         # Create the stock entry
         se = frappe.get_doc({
             'doctype': 'Stock Entry',
-            'stock_entry_type': 'Material Receipt',
-            'purpose': 'Material Receipt',
+            'stock_entry_type': 'Material Issue',
+            'purpose': 'Material Issue',
             'posting_date': purchase_invoice.posting_date,
             'posting_time': purchase_invoice.posting_time,
             'set_posting_time': 1,
@@ -110,6 +110,7 @@ def make_stock_entry(purchase_invoice):
                         'voucher_no': purchase_invoice.name,
                         'stock_entry_no': se.name,
                         'actual_qty': detail.qty,
+                        'out_empty_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'supplier': purchase_invoice.supplier,

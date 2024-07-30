@@ -30,6 +30,8 @@
   "empty_price",
   "empty_amount",
   "difference_in_qty",
+  "in_empty_qty",
+  "out_empty_qty",
   "section_break_21",
   "company",
   "cost_center",
@@ -331,6 +333,20 @@
    "print_width": "150px",
    "read_only": 1,
    "width": "150px"
+  },
+  {
+   "fieldname": "in_empty_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "In Empty Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "out_empty_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Out Empty Qty",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
@@ -338,7 +354,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-24 11:23:49.922125",
+ "modified": "2024-07-30 23:46:12.477816",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",
