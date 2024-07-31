@@ -5,4 +5,9 @@
 from frappe.model.document import Document
 
 class POSEmptyBottleEntry(Document):
-	pass
+    def on_cancel(self):
+        self.status = "Cancelled"
+        self.is_cancelled = 1
+
+        self.db_set('status', 'Cancelled')
+        self.db_set('is_cancelled', 1)

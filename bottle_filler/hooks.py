@@ -14,7 +14,8 @@ app_license = "MIT"
 # Includes in <head>
 # ------------------
 
-fixtures = [{
+fixtures = ["Workflow", "Workflow State",
+{
   'dt' : 'Custom Field', 'filters':[
     [
       'name', 'in', [
@@ -117,6 +118,10 @@ doc_events = {
     "on_cancel": "bottle_filler.bottle_filler.sinvoice.setup"
   },
   "Purchase Invoice": {
+    "on_submit": "bottle_filler.bottle_filler.pinvoice.setup",
+    "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
+  },
+  "POS Empty Bottle Entry": {
     "on_submit": "bottle_filler.bottle_filler.pinvoice.setup",
     "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
   }

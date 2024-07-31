@@ -18,7 +18,7 @@
   "stock_entry_no",
   "voucher_type",
   "voucher_no",
-  "voucher_detail_no",
+  "pos_empty_entry_no",
   "section_break_11",
   "actual_qty",
   "price",
@@ -144,17 +144,6 @@
    "options": "voucher_type",
    "print_width": "150px",
    "read_only": 1,
-   "width": "150px"
-  },
-  {
-   "fieldname": "voucher_detail_no",
-   "fieldtype": "Data",
-   "label": "Voucher Detail No",
-   "oldfieldname": "voucher_detail_no",
-   "oldfieldtype": "Data",
-   "print_width": "150px",
-   "read_only": 1,
-   "search_index": 1,
    "width": "150px"
   },
   {
@@ -347,6 +336,14 @@
    "in_list_view": 1,
    "label": "Out Empty Qty",
    "read_only": 1
+  },
+  {
+   "fieldname": "pos_empty_entry_no",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "POS Empty Entry No",
+   "options": "POS Empty Bottle Entry",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
@@ -354,7 +351,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-30 23:46:12.477816",
+ "modified": "2024-07-31 03:06:32.820784",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",

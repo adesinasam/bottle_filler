@@ -184,7 +184,7 @@ def make_pos_entry(sales_invoice):
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'customer': sales_invoice.customer,
-                        'empty_qty': 0,
+                        'empty_qty': detail.qty,
                         'difference_in_qty': detail.qty,
                         'company': sales_invoice.company,
                         'cost_center': detail.cost_center,
@@ -206,6 +206,10 @@ def make_pos_entry(sales_invoice):
         # Iterate over each entry and update fields
         for entry in pr_names:
             pr_name = entry.name
-            if pr_name:
+            if entry.status == "Pending":
                 # Fetch the Empty Bottle Entry document using the retrieved name
                 btl = frappe.delete_doc('POS Empty Bottle Entry', pr_name)
+
+            if entry.status == "Approved":
+                # Fetch the Empty Bottle Entry document using the retrieved name
+                btl = frappe.cancel('POS Empty Bottle Entry', pr_name)
