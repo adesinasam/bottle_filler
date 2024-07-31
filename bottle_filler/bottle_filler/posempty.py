@@ -20,12 +20,6 @@ def make_stock_entry(pos_empty):
         pos_empty: The POS Empty Bottle Entry document object.
     """
     if pos_empty.status == "Approved":         
-        if frappe.db.exists({'doctype': 'Stock Entry', 'salesinvoiceno': pos_empty.voucher_no}):
-            frappe.throw(
-                title="Error",
-                msg="Stock Entry for Invoice {} already exists.".format(pos_empty.voucher_no)
-            )
-
         stock_uom = frappe.db.get_value('Item', pos_empty.empty_item_code, 'stock_uom')   
    
         items = []
