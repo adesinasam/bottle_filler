@@ -4,7 +4,7 @@ from frappe import utils
 
 def setup(pos_empty, method):
     """
-    Setup function to filter POS Empty Bottle Entry items and create stock entries for items with empty bottles.
+    Setup function to filter POS Empty Bottle Entry and create stock entries for with empty bottles.
     
     Args:
         pos_empty: The POS Empty Bottle Entry document object.
@@ -14,7 +14,7 @@ def setup(pos_empty, method):
 
 def make_stock_entry(pos_empty):
     """
-    Creates stock entries for the items in the POS Empty Bottle Entry with empty bottles.
+    Creates stock entries for the POS Empty Bottle Entry with empty bottles.
     
     Args:
         pos_empty: The POS Empty Bottle Entry document object.
@@ -39,12 +39,6 @@ def make_stock_entry(pos_empty):
             'basic_rate': float(pos_empty.empty_price),
             'cost_center': pos_empty.cost_center
         })
-        
-        if not items:
-            frappe.throw(
-                title="Error",
-                msg="No valid empty bottle items found to create Stock Entry."
-            )
 
         # Create the stock entry
         se = frappe.get_doc({
