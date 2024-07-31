@@ -28,6 +28,8 @@ def make_stock_entry(pos_empty):
 
         stock_uom = frappe.db.get_value('Item', pos_empty.empty_item_code, 'stock_uom')   
    
+        items = []
+
         items.append({
             't_warehouse': pos_empty.warehouse,
             'item_code': pos_empty.empty_item_code,
@@ -39,6 +41,12 @@ def make_stock_entry(pos_empty):
             'basic_rate': float(pos_empty.empty_price),
             'cost_center': pos_empty.cost_center
         })
+        
+        if not items:
+            frappe.throw(
+                title="Error",
+                msg="No valid empty bottle items found to create Stock Entry."
+            )
 
         # Create the stock entry
         se = frappe.get_doc({
