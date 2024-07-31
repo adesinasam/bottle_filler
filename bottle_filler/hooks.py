@@ -122,8 +122,8 @@ doc_events = {
     "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
   },
   "POS Empty Bottle Entry": {
-    "on_submit": "bottle_filler.bottle_filler.pinvoice.setup",
-    "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
+    "on_submit": "bottle_filler.bottle_filler.posempty.setup",
+    "on_cancel": "bottle_filler.bottle_filler.posempty.setup"
   }
 }
 
