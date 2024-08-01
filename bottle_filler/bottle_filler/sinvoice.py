@@ -206,10 +206,27 @@ def make_pos_entry(sales_invoice):
         # Iterate over each entry and update fields
         for entry in pr_names:
             pr_name = entry.name
-            if entry.status == "Pending":
-                # Fetch the Empty Bottle Entry document using the retrieved name
-                btl = frappe.delete_doc('POS Empty Bottle Entry', pr_name)
+            if pr_name:
+                if entry.status == "Pending":
+                    # Fetch the Empty Bottle Entry document using the retrieved name
+                    btl = frappe.delete_doc('POS Empty Bottle Entry', pr_name)
 
-            if entry.status == "Approved":
-                # Fetch the Empty Bottle Entry document using the retrieved name
-                btl = frappe.cancel('POS Empty Bottle Entry', pr_name)
+                if entry.status == "Approved":
+                    # Fetch the Empty Bottle Entry document using the retrieved name
+                    btl = frappe.cancel('POS Empty Bottle Entry', pr_name)
+            
+                    # Fetch all Empty Bottle Entry names matching the criteria
+                    peb_names = frappe.get_all("Empty Bottle Entry", 
+                        filters={"voucher_type": 'Sales Invoice', "pos_empty_entry_no": pr_name}, 
+                        fields=["name"]
+                    )
+                    # Iterate over each entry and update fields
+                    for entryss in peb_names:
+                        peb_name = entryss.name
+                        if peb_name:
+                            # Fetch the Empty Bottle Entry document using the retrieved name
+                            pbtl = frappe.get_doc('Empty Bottle Entry', peb_name)
+
+                            # Set the stock_entry_no field and the status to 'Cancelled'
+                            pbtl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
+                            pbtl.db_set('is_cancelled', 1)  # Mark the document as cancelled
