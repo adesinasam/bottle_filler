@@ -1,7 +1,7 @@
 frappe.ui.form.on('Purchase Invoice', {
     validate: function(frm) {
         $.each(frm.doc.items || [], function(i, item) {
-            if (item.has_empty_bottle && !item.allow_in_pos && item.empty_bottle_qty===0) {
+            if (item.has_empty_bottle && !item.allow_in_pos && !frm.doc.is_return && item.empty_bottle_qty===0) {
                 frappe.msgprint(__('Row #{0}: Empty Bottle Quantity cannot be zero.', [item.idx]));
                 frappe.validated = false;
                 return false;
@@ -33,14 +33,14 @@ frappe.ui.form.on("Purchase Invoice Item", {
     },
     item_code: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.has_empty_bottle && !row.allow_in_pos) {
+        if (row.has_empty_bottle && !row.allow_in_pos && !frm.doc.is_return) {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', 1);
         refresh_field("empty_bottle_qty", row.name);
         }
     },
     qty: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.has_empty_bottle && !row.allow_in_pos) {
+        if (row.has_empty_bottle && !row.allow_in_pos && !frm.doc.is_return) {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', row.qty);
         refresh_field("empty_bottle_qty", row.name);
         }
