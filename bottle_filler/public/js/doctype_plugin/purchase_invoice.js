@@ -7,6 +7,13 @@ frappe.ui.form.on('Purchase Invoice', {
                 return false;
             }
         });
+        $.each(frm.doc.items || [], function(i, item) {
+            if (item.has_empty_bottle && frm.doc.is_return && item.empty_bottle_qty>0) {
+                frappe.msgprint(__('Row #{0}: Empty Bottle Quantity should be set to zero.', [item.idx]));
+                frappe.validated = false;
+                return false;
+            }
+        });
     }
 })
 
@@ -40,7 +47,7 @@ frappe.ui.form.on("Purchase Invoice Item", {
     },
     qty: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.has_empty_bottle && !row.allow_in_pos && !frm.doc.is_return) {
+        if (row.has_empty_bottle && !row.allow_in_pos) {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', row.qty);
         refresh_field("empty_bottle_qty", row.name);
         }
