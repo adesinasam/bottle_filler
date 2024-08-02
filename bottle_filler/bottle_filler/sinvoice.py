@@ -53,7 +53,6 @@ def make_stock_entry(sales_invoice):
     Args:
         sales_invoice: The Sales Invoice document object.
     """
-    frappe.flags.ignore_permissions = True
     if sales_invoice.docstatus == 1:         
         if frappe.db.exists({'doctype': 'Stock Entry', 'salesinvoiceno': sales_invoice.name}):
             frappe.throw(
@@ -162,7 +161,6 @@ def make_pos_entry(sales_invoice):
     Args:
         sales_invoice: The Sales Invoice document object.
     """
-    frappe.flags.ignore_permissions = True
     if sales_invoice.docstatus == 1:         
 
         for detail in sales_invoice.items:            
