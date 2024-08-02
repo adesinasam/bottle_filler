@@ -1,6 +1,5 @@
 import frappe
 from frappe import _
-from frappe import utils
 
 def setup(sales_invoice, method):
     """
@@ -53,8 +52,6 @@ def make_stock_entry(sales_invoice):
     Args:
         sales_invoice: The Sales Invoice document object.
     """
-    frappe.permissions.check_if_user_has_permission = lambda *args, **kwargs: True
-
     if sales_invoice.docstatus == 1:         
         if frappe.db.exists({'doctype': 'Stock Entry', 'salesinvoiceno': sales_invoice.name}):
             frappe.throw(
@@ -99,8 +96,8 @@ def make_stock_entry(sales_invoice):
             'salesinvoiceno': sales_invoice.name
         })
 
-        se.insert()
-        se.submit()
+        se.insert(ignore_permissions=True)
+        se.submit(ignore_permissions=True)
 
         for detail in sales_invoice.items:            
             if detail.empty_bottle_item_code:
@@ -133,7 +130,7 @@ def make_stock_entry(sales_invoice):
                         'territory': sales_invoice.territory
                     })
                     # Insert the document into the database
-                    btl.insert()
+                    btl.insert(ignore_permissions=True)
                 except Exception as e:
                     frappe.log_error(frappe.get_traceback(), f"Failed to create Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
                     frappe.throw(_("Failed to create Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
@@ -155,7 +152,6 @@ def make_stock_entry(sales_invoice):
                 btl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
                 btl.db_set('is_cancelled', 1)  # Mark the document as cancelled
 
-
 def make_pos_entry(sales_invoice):
     """
     Creates pos empty bottle entries for the items in the sales invoice with allow empty bottles.
@@ -163,8 +159,6 @@ def make_pos_entry(sales_invoice):
     Args:
         sales_invoice: The Sales Invoice document object.
     """
-    frappe.permissions.check_if_user_has_permission = lambda *args, **kwargs: True
-
     if sales_invoice.docstatus == 1:         
 
         for detail in sales_invoice.items:            
@@ -183,7 +177,7 @@ def make_pos_entry(sales_invoice):
                         'empty_item_name': detail.empty_bottle_item_name,
                         'voucher_type': 'Sales Invoice',
                         'voucher_no': sales_invoice.name,
-                        'pos_profile': sales_invoice.pos_profile,
+                        'pos_profile': sales_invoice.get('pos_profile', ''),
                         'actual_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
@@ -195,8 +189,8 @@ def make_pos_entry(sales_invoice):
                         'territory': sales_invoice.territory
                     })
                     # Insert the document into the database
-                    btl.insert()
-                    btl.save()
+                    btl.insert(ignore_permissions=True)
+                    btl.save(ignore_permissions=True)
                 except Exception as e:
                     frappe.log_error(frappe.get_traceback(), f"Failed to create POS Empty Bottle Entry for Sales Invoice {sales_invoice.name}")
                     frappe.throw(_("Failed to create POS Empty Bottle Entry for item {0}: {1}").format(detail.item_code, str(e)))
@@ -205,19 +199,19 @@ def make_pos_entry(sales_invoice):
         # Fetch all Empty Bottle Entry names matching the criteria
         pr_names = frappe.get_all("POS Empty Bottle Entry", 
             filters={"voucher_type": 'Sales Invoice', "voucher_no": sales_invoice.name}, 
-            fields=["name"]
+            fields=["name", "status"]
         )
         # Iterate over each entry and update fields
         for entry in pr_names:
             pr_name = entry.name
             if pr_name:
                 if entry.status == "Pending":
-                    # Fetch the Empty Bottle Entry document using the retrieved name
-                    btl = frappe.delete_doc('POS Empty Bottle Entry', pr_name)
+                    # Delete the POS Empty Bottle Entry document using the retrieved name
+                    frappe.delete_doc('POS Empty Bottle Entry', pr_name, ignore_permissions=True)
 
-                if entry.status == "Approved":
-                    # Fetch the Empty Bottle Entry document using the retrieved name
-                    btl = frappe.cancel('POS Empty Bottle Entry', pr_name)
+                elif entry.status == "Approved":
+                    # Cancel the POS Empty Bottle Entry document using the retrieved name
+                    frappe.cancel_doc('POS Empty Bottle Entry', pr_name, ignore_permissions=True)
             
                     # Fetch all Empty Bottle Entry names matching the criteria
                     peb_names = frappe.get_all("Empty Bottle Entry", 
@@ -232,5 +226,5 @@ def make_pos_entry(sales_invoice):
                             pbtl = frappe.get_doc('Empty Bottle Entry', peb_name)
 
                             # Set the stock_entry_no field and the status to 'Cancelled'
-                            pbtl.db_set('status', 'Cancelled')  # Update the status to 'Cancelled'
-                            pbtl.db_set('is_cancelled', 1)  # Mark the document as cancelled
+                            pbtl.db_set('status', 'Cancelled', ignore_permissions=True)  # Update the status to 'Cancelled'
+                            pbtl.db_set('is_cancelled', 1, ignore_permissions=True)  # Mark the document as cancelled

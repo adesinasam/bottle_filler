@@ -290,7 +290,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Territory",
-   "options": "Territory"
+   "options": "Territory",
+   "read_only": 1
   },
   {
    "fieldname": "supplier",
@@ -351,7 +352,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-01 07:29:49.171984",
+ "modified": "2024-08-02 13:56:01.792862",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",
