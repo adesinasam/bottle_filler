@@ -51,5 +51,20 @@ frappe.ui.form.on("Purchase Invoice Item", {
         frappe.model.set_value(cdt, cdn, 'empty_bottle_qty', row.qty);
         refresh_field("empty_bottle_qty", row.name);
         }
-    }
+    },
+    empty_bottle_qty:function(frm, cdt, cdn){
+        var d = locals[cdt][cdn];
+        var total = 0;
+        frm.doc.items.forEach(function(d) { total += d.empty_bottle_qty; });
+        frm.set_value("total_empty_quantity", total);
+    refresh_field("total_empty_quantity");
+    },
+
+    items_remove:function(frm, cdt, cdn){
+        var d = locals[cdt][cdn];
+        var total = 0;
+        frm.doc.items.forEach(function(d) { total += d.empty_bottle_qty; });
+        frm.set_value("total_empty_quantity", total);
+    refresh_field("total_empty_quantity");
+    }    
 })
