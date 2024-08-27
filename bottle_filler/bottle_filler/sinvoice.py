@@ -170,7 +170,7 @@ def make_pos_entry(sales_invoice):
         for detail in sales_invoice.items:
             if detail.allow_in_pos:
                 items.append({
-                    't_warehouse': detail.warehouse,
+                    's_warehouse': detail.warehouse,
                     'item_code': detail.item_code,
                     'qty': detail.qty,
                     'transfer_qty': detail.qty,
@@ -223,7 +223,7 @@ def make_pos_entry(sales_invoice):
                         'voucher_no': sales_invoice.name,
                         'stock_entry_no': se.name,
                         'actual_qty': detail.qty,
-                        'in_empty_qty': detail.qty,
+                        'out_empty_qty': detail.qty,
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'customer': sales_invoice.customer,
