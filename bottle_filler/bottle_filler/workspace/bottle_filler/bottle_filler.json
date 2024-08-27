@@ -29,12 +29,6 @@
  "shortcuts": [
   {
    "doc_view": "Report Builder",
-   "label": "POS Empty Bottle Entry",
-   "link_to": "POS Empty Bottle Entry",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "Report Builder",
    "label": "Empty Bottle Log",
    "link_to": "Empty Bottle Entry",
    "type": "DocType"
