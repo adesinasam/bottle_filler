@@ -193,6 +193,7 @@ def make_pos_entry(sales_invoice):
             'doctype': 'Stock Entry',
             'stock_entry_type': 'Material Issue',
             'purpose': 'Material Issue',
+            'with_purchase': 0,
             'posting_date': sales_invoice.posting_date,
             'posting_time': sales_invoice.posting_time,
             'set_posting_time': 1,
