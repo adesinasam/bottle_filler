@@ -25,7 +25,7 @@ def setup(sales_invoice, method):
                 if not detail.allow_in_pos:
                     invoice_items.append(detail)
             elif detail.allow_in_pos:
-                if not detail.empty_bottle_item_code:
+                if sales_invoice.is_pos:
                     posinv_items.append(detail)
 
         # Update sales invoice items based on the filters
