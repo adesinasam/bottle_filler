@@ -21,7 +21,7 @@ def setup(purchase_invoice, method):
         # Filter items based on conditions
         for detail in purchase_invoice.items:
             if detail.empty_bottle_item_code:
-                if detail.empty_bottle_qty > 0:
+                # if detail.empty_bottle_qty > 0:
                     invoice_items.append(detail)
 
         # Update purchase invoice items based on the filters
@@ -56,18 +56,29 @@ def make_stock_entry(purchase_invoice):
         items = []
         for detail in purchase_invoice.items:
             if detail.empty_bottle_item_code:
-                items.append({
-                    's_warehouse': detail.warehouse,
+                if not purchase_invoice.is_return and detail.empty_bottle_qty < 0:
+                    frappe.throw("Empty bottle quantity must be positive number.")
+
+                item = {
                     'item_code': detail.empty_bottle_item_code,
-                    'qty': detail.empty_bottle_qty,
-                    'transfer_qty': detail.empty_bottle_qty,
+                    'qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
+                    'transfer_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
                     'uom': detail.uom,
                     'stock_uom': detail.stock_uom,
                     'conversion_factor': detail.conversion_factor,
                     'basic_rate': float(detail.empty_bottle_rate),
                     'project': detail.project,
                     'cost_center': detail.cost_center
-                })
+                }
+
+                # Add warehouse based on the condition
+                if not purchase_invoice.is_return:
+                    item['s_warehouse'] = detail.warehouse
+                else:
+                    item['t_warehouse'] = detail.warehouse
+
+                # Append the item to the list
+                items.append(item)
         
         if not items:
             frappe.throw(
@@ -76,19 +87,35 @@ def make_stock_entry(purchase_invoice):
             )
 
         # Create the stock entry
-        se = frappe.get_doc({
-            'doctype': 'Stock Entry',
-            'stock_entry_type': 'Material Issue',
-            'purpose': 'Material Issue',
-            'posting_date': purchase_invoice.posting_date,
-            'posting_time': purchase_invoice.posting_time,
-            'set_posting_time': 1,
-            'company': purchase_invoice.company,
-            'items': items,
-            'remarks': 'Being Empty Entry',
-            'project': purchase_invoice.project,
-            'purchase_invoice_no': purchase_invoice.name
-        })
+        if not purchase_invoice.is_return:
+            se = frappe.get_doc({
+                'doctype': 'Stock Entry',
+                'stock_entry_type': 'Material Issue',
+                'purpose': 'Material Issue',
+                'posting_date': purchase_invoice.posting_date,
+                'posting_time': purchase_invoice.posting_time,
+                'set_posting_time': 1,
+                'company': purchase_invoice.company,
+                'items': items,
+                'remarks': 'Being Purchase Empty Entry',
+                'project': purchase_invoice.project,
+                'purchase_invoice_no': purchase_invoice.name
+            })
+        else:
+            se = frappe.get_doc({
+                'doctype': 'Stock Entry',
+                'stock_entry_type': 'Material Receipt',
+                'purpose': 'Material Receipt',
+                'posting_date': purchase_invoice.posting_date,
+                'posting_time': purchase_invoice.posting_time,
+                'set_posting_time': 1,
+                'company': purchase_invoice.company,
+                'items': items,
+                'remarks': 'Being Return Purchase Empty Entry',
+                'project': purchase_invoice.project,
+                'purchase_invoice_no': purchase_invoice.name
+            })
+
 
         se.insert()
         se.submit()
@@ -114,10 +141,10 @@ def make_stock_entry(purchase_invoice):
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'supplier': purchase_invoice.supplier,
-                        'empty_qty': detail.empty_bottle_qty,
+                        'empty_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
                         'empty_price': float(detail.empty_bottle_rate),
                         'empty_amount': float(detail.empty_bottle_amount),
-                        'difference_in_qty': detail.qty - detail.empty_bottle_qty,
+                        'difference_in_qty': detail.qty - detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
                         'company': purchase_invoice.company,
                         'status': 'Submitted',
                         'cost_center': detail.cost_center
