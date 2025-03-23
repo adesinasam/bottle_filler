@@ -61,8 +61,8 @@ def make_stock_entry(purchase_invoice):
 
                 item = {
                     'item_code': detail.empty_bottle_item_code,
-                    'qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
-                    'transfer_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
+                    'qty': detail.empty_bottle_qty if not purchase_invoice.is_return else (detail.empty_bottle_qty * -1),
+                    'transfer_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else (detail.empty_bottle_qty * -1),
                     'uom': detail.uom,
                     'stock_uom': detail.stock_uom,
                     'conversion_factor': detail.conversion_factor,
@@ -141,10 +141,10 @@ def make_stock_entry(purchase_invoice):
                         'price': float(detail.rate),
                         'amount': float(detail.amount),
                         'supplier': purchase_invoice.supplier,
-                        'empty_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
+                        'empty_qty': detail.empty_bottle_qty if not purchase_invoice.is_return else (detail.empty_bottle_qty * -1),
                         'empty_price': float(detail.empty_bottle_rate),
                         'empty_amount': float(detail.empty_bottle_amount),
-                        'difference_in_qty': detail.qty - detail.empty_bottle_qty if not purchase_invoice.is_return else detail.qty,
+                        'difference_in_qty': detail.qty - detail.empty_bottle_qty,
                         'company': purchase_invoice.company,
                         'status': 'Submitted',
                         'cost_center': detail.cost_center
