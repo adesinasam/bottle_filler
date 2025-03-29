@@ -394,7 +394,7 @@
    "insert_after": "stock_uom",
    "label": "Qty (Empty Bottle)",
    "length": 0,
-   "mandatory_depends_on": "eval:!doc.allow_in_pos && doc.has_empty_bottle",
+   "mandatory_depends_on": "eval:!parent.is_pos && doc.has_empty_bottle",
    "modified": "2024-07-21 16:30:17.329396",
    "modified_by": "Administrator",
    "name": "Sales Invoice Item-empty_bottle_qty",
