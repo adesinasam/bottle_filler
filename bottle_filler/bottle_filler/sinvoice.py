@@ -243,15 +243,29 @@ def cancel_empty_bottle_entries(voucher_no):
 
 
 def validate(sales_invoice, method):
-    """Auto-fill empty_bottle_qty with qty for POS items where allow_in_pos is checked."""
-    if sales_invoice.is_pos:
-        for detail in sales_invoice.items:
-            if not detail.allow_in_pos and detail.empty_bottle_item_code:
-                detail.empty_bottle_qty = detail.qty
+    """
+    Auto-fill empty_bottle_qty and enforce expense_account for POS Sales Invoices.
+    Uses flags to prevent recursion.
+    """
+    if not sales_invoice.flags.before_save_processed and sales_invoice.is_pos:
+        sales_invoice.flags.before_save_processed = True  # Anti-recursion flag
+        
+        default_expense_account = frappe.get_cached_value(
+            "Company", 
+            sales_invoice.company, 
+            "default_expense_account"
+        )
 
-            elif not detail.empty_bottle_item_code and detail.allow_in_pos:
-                default_expense_account = frappe.get_cached_value("Company", sales_invoice.company, "default_expense_account")
-                if default_expense_account:
-                    detail.expense_account = expense
-                else:
-                    frappe.throw(_("Default Expense Account not set for Company {}").format(sales_invoice.company))
+        for item in sales_invoice.items:
+            # Case 1: Non-POS item with empty bottle - auto-fill qty
+            if not item.allow_in_pos and item.empty_bottle_item_code:
+                item.empty_bottle_qty = item.qty
+            
+            # Case 2: POS item without empty bottle - enforce expense account
+            elif item.allow_in_pos and not item.empty_bottle_item_code:
+                if not default_expense_account:
+                    frappe.throw(
+                        _("Default Expense Account not set for Company {}").format(sales_invoice.company),
+                        title=_("Missing Account")
+                    )
+                item.expense_account = default_expense_account  # Force-set even if exists
