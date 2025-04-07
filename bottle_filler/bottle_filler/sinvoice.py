@@ -248,3 +248,10 @@ def validate(sales_invoice, method):
         for detail in sales_invoice.items:
             if not detail.allow_in_pos and detail.empty_bottle_item_code:
                 detail.empty_bottle_qty = detail.qty
+
+            elif not detail.empty_bottle_item_code and detail.allow_in_pos:
+                default_expense_account = frappe.get_cached_value("Company", sales_invoice.company, "default_expense_account")
+                if default_expense_account:
+                    detail.expense_account = expense
+                else:
+                    frappe.throw(_("Default Expense Account not set for Company {}").format(sales_invoice.company))
