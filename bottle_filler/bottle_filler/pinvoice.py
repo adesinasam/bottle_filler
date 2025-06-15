@@ -99,6 +99,7 @@ def make_stock_entry(purchase_invoice):
                 'items': items,
                 'remarks': 'Being Purchase Empty Entry',
                 'project': purchase_invoice.project,
+                'with_purchase': 1,
                 'purchase_invoice_no': purchase_invoice.name
             })
         else:
@@ -113,6 +114,7 @@ def make_stock_entry(purchase_invoice):
                 'items': items,
                 'remarks': 'Being Return Purchase Empty Entry',
                 'project': purchase_invoice.project,
+                'with_purchase': 1,
                 'purchase_invoice_no': purchase_invoice.name
             })
 

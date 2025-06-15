@@ -99,6 +99,7 @@ def make_stock_entry(sales_invoice):
                 'items': items,
                 'remarks': 'Being Sales Return Empty Entry' if sales_invoice.is_return else 'Being Sales Empty Entry',
                 'project': sales_invoice.project,
+                'with_sales': 1,
                 'salesinvoiceno': sales_invoice.name
                 })
 
@@ -188,6 +189,7 @@ def make_pos_entry(sales_invoice):
                 'items': items,
                 'remarks': 'Being POS Empty Entry',
                 'project': sales_invoice.project,
+                'with_sales': 1,
                 'salesinvoiceno': sales_invoice.name
             })
 
