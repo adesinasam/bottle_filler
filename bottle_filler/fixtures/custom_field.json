@@ -1332,7 +1332,7 @@
    "columns": 0,
    "creation": "2023-11-10 16:51:29.267379",
    "default": null,
-   "depends_on": "eval:doc.purpose==\"Material Issue\" && doc.company==\"MOYOSORE STORES\" && doc.with_purchase==0",
+   "depends_on": "eval:doc.purpose==\"Material Issue\" && doc.with_purchase==0",
    "description": null,
    "docstatus": 0,
    "doctype": "Custom Field",

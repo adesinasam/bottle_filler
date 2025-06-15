@@ -1,10 +1,6 @@
 {
- "charts": [
-  {
-   "chart_name": "Empty Bottle Log",
-   "label": "Empty Bottle Log"
-  }
- ],
+ "charts": [],
+ "content": "[{\"id\":\"cJhgdSD9eR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Bottle Filler</span>\",\"col\":12}},{\"id\":\"G984SWZRJN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Empty Bottle Log\",\"col\":4}}]",
  "creation": "2024-07-22 12:01:33.435035",
  "developer_mode_only": 0,
  "disable_user_customization": 1,
@@ -13,12 +9,13 @@
  "extends_another_page": 0,
  "hide_custom": 0,
  "public": 1,
+ "parent_page": "",
  "title": "Bottle Filler",
- "sequence_id": 8,
+ "sequence_id": 5.0,
  "icon": "stock",
  "idx": 0,
  "is_default": 0,
- "is_standard": 1,
+ "is_standard": 0,
  "label": "Bottle Filler",
  "links": [],
  "modified": "2024-07-22 12:09:43.716086",
