@@ -341,14 +341,14 @@
    "fieldtype": "Select",
    "hidden": 1,
    "label": "Status",
-   "options": "Pending\nApproved\nRejected"
+   "options": "Pending\nApproved\nRejected\nCancelled"
   }
  ],
  "icon": "fa fa-list",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-01 07:32:22.623093",
+ "modified": "2026-11-17 05:00:00.000000",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "POS Empty Bottle Entry",

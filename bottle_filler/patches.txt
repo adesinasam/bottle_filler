@@ -1,0 +1,4 @@
+[pre_model_sync]
+
+[post_model_sync]
+bottle_filler.patches.v15.set_empties_defaults

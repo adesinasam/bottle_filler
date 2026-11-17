@@ -352,7 +352,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-02 14:34:01.629061",
+ "modified": "2026-11-17 05:00:00.000000",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",
@@ -366,20 +366,16 @@
    "role": "Stock User"
   },
   {
-   "create": 1,
    "export": 1,
    "read": 1,
    "report": 1,
-   "role": "Accounts Manager",
-   "write": 1
+   "role": "Accounts Manager"
   },
   {
-   "create": 1,
    "export": 1,
    "read": 1,
    "report": 1,
-   "role": "Accounts User",
-   "write": 1
+   "role": "Accounts User"
   }
  ],
  "sort_field": "modified",

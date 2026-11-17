@@ -10,35 +10,56 @@ app_icon = "octicon octicon-file-directory"
 app_color = "grey"
 app_email = "support@glistercp.com.ng"
 app_license = "MIT"
+required_apps = ["erpnext"]
 
 # Includes in <head>
 # ------------------
 
-fixtures = ["Workflow", "Workflow State",
-{
-  'dt' : 'Custom Field', 'filters':[
-    [
-      'name', 'in', [
-        'Item-has_empty_bottle',
-        'Item-empty_bottle_item',
-        'Item-empty_bottle_item_name',
-        'Item-allow_in_pos',
-        'Sales Invoice Item-has_empty_bottle',
-        'Sales Invoice Item-empty_bottle_item_code',
-        'Sales Invoice-empty_bottle_item_name',
-        'Sales Invoice-empty_bottle_qty',
-        'Sales Invoice-empty_bottle_rate',
-        'Sales Invoice-empty_bottle_amount',
-        'Purchase Invoice Item-has_empty_bottle',
-        'Purchase Invoice Item-empty_bottle_item_code',
-        'Purchase Invoice-empty_bottle_item_name',
-        'Purchase Invoice-empty_bottle_qty',
-        'Purchase Invoice-empty_bottle_rate',
-        'Purchase Invoice-empty_bottle_amount'
-      ]
-    ]
-  ]
-}]
+fixtures = [
+	{"dt": "Workflow", "filters": [["name", "=", "POS Empty Bottle Entry"]]},
+	{
+		"dt": "Workflow State",
+		"filters": [["name", "in", ["Pending", "Approved", "Rejected", "Draft", "Cancelled"]]],
+	},
+	{
+		"dt": "Custom Field",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"Item-allow_in_pos",
+					"Item-empties_per_stock_uom",
+					"Item-empty_bottle_item",
+					"Item-empty_bottle_item_name",
+					"Item-has_empty_bottle",
+					"Item-is_empty_bottle",
+					"Purchase Invoice Item-allow_in_pos",
+					"Purchase Invoice Item-empty_bottle_amount",
+					"Purchase Invoice Item-empty_bottle_item_code",
+					"Purchase Invoice Item-empty_bottle_item_name",
+					"Purchase Invoice Item-empty_bottle_qty",
+					"Purchase Invoice Item-empty_bottle_rate",
+					"Purchase Invoice Item-expected_empty_qty",
+					"Purchase Invoice Item-has_empty_bottle",
+					"Sales Invoice Item-allow_in_pos",
+					"Sales Invoice Item-empty_bottle_amount",
+					"Sales Invoice Item-empty_bottle_item_code",
+					"Sales Invoice Item-empty_bottle_item_name",
+					"Sales Invoice Item-empty_bottle_qty",
+					"Sales Invoice Item-empty_bottle_rate",
+					"Sales Invoice Item-expected_empty_qty",
+					"Sales Invoice Item-has_empty_bottle",
+					"Stock Entry-purchase_invoice_no",
+					"Stock Entry-remarks_attachment",
+					"Stock Entry-salesinvoiceno",
+					"Stock Entry-with_purchase",
+					"Stock Entry-with_sales",
+				],
+			]
+		],
+	},
+]
 
 
 # include js, css files in header of desk.html
@@ -113,19 +134,20 @@ after_uninstall = "bottle_filler.setup.uninstall.after_uninstall"
 # Hook on document methods and events
 
 doc_events = {
-  "Sales Invoice": {
-    "before_save": "bottle_filler.bottle_filler.sinvoice.validate",
-    "on_submit": "bottle_filler.bottle_filler.sinvoice.setup",
-    "on_cancel": "bottle_filler.bottle_filler.sinvoice.setup"
-  },
-  "Purchase Invoice": {
-    "on_submit": "bottle_filler.bottle_filler.pinvoice.setup",
-    "on_cancel": "bottle_filler.bottle_filler.pinvoice.setup"
-  },
-  "POS Empty Bottle Entry": {
-    "on_submit": "bottle_filler.bottle_filler.posempty.setup",
-    "on_cancel": "bottle_filler.bottle_filler.posempty.setup"
-  }
+	"Sales Invoice": {
+		"validate": "bottle_filler.bottle_filler.sinvoice.validate",
+		"on_submit": "bottle_filler.bottle_filler.sinvoice.on_submit",
+		"on_cancel": "bottle_filler.bottle_filler.sinvoice.on_cancel",
+	},
+	"Purchase Invoice": {
+		"validate": "bottle_filler.bottle_filler.pinvoice.validate",
+		"on_submit": "bottle_filler.bottle_filler.pinvoice.on_submit",
+		"on_cancel": "bottle_filler.bottle_filler.pinvoice.on_cancel",
+	},
+	"POS Empty Bottle Entry": {
+		"on_submit": "bottle_filler.bottle_filler.posempty.on_submit",
+		"on_cancel": "bottle_filler.bottle_filler.posempty.on_cancel",
+	},
 }
 
 
