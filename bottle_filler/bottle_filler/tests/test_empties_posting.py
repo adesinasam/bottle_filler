@@ -13,6 +13,7 @@ import erpnext
 from erpnext.accounts.doctype.purchase_invoice.test_purchase_invoice import make_purchase_invoice
 from erpnext.accounts.doctype.sales_invoice.test_sales_invoice import create_sales_invoice
 from erpnext.controllers.sales_and_purchase_return import make_return_doc
+from erpnext.stock.doctype.delivery_note.test_delivery_note import create_delivery_note
 from erpnext.stock.doctype.item.test_item import make_item
 from erpnext.stock.doctype.stock_entry.stock_entry_utils import make_stock_entry
 
@@ -129,6 +130,7 @@ class TestEmptiesPosting(FrappeTestCase):
 				"in_empty_qty",
 				"out_empty_qty",
 				"difference_in_qty",
+				"traded_empty_qty",
 				"is_cancelled",
 				"status",
 				"stock_entry_no",
@@ -281,6 +283,56 @@ class TestEmptiesPosting(FrappeTestCase):
 		# Update Stock already moved the empties: no extra stock entry
 		self.assertFalse(self.get_stock_entries("salesinvoiceno", si.name))
 
+	def test_customer_short_of_empties_buys_the_balance(self):
+		si = create_sales_invoice(
+			company=COMPANY,
+			item_code=self.coke_crate,
+			qty=10,
+			rate=1000,
+			warehouse=WAREHOUSE,
+			uom="Nos",
+			do_not_save=1,
+		)
+		si.items[0].empty_bottle_qty = 6
+		si.append(
+			"items",
+			{
+				"item_code": self.empty_crate,
+				"qty": 4,
+				"rate": 600,
+				"uom": "Nos",
+				"conversion_factor": 1,
+				"warehouse": WAREHOUSE,
+				"income_account": si.items[0].income_account,
+				"cost_center": si.items[0].cost_center,
+				"expense_account": self.account,
+			},
+		)
+		si.insert()
+		si.submit()
+
+		cogs = frappe.get_cached_value("Company", COMPANY, "default_expense_account")
+		self.assertEqual(si.items[1].expense_account, cogs)
+		(se,) = self.get_stock_entries("salesinvoiceno", si.name)
+		self.assertEqual(flt(se.items[0].qty), 6)
+		(ledger,) = self.get_ledger(si.name)
+		self.assertEqual(flt(ledger.empty_qty), 6)
+		self.assertEqual(flt(ledger.traded_empty_qty), 4)
+		self.assertEqual(flt(ledger.difference_in_qty), 0)
+
+	def test_delivery_note_selling_empty_item_uses_company_cogs(self):
+		self.receive_empties(self.empty_jar, 5, 300)
+		dn = create_delivery_note(
+			company=COMPANY,
+			item_code=self.empty_jar,
+			qty=2,
+			rate=350,
+			warehouse=WAREHOUSE,
+			expense_account=self.account,
+		)
+		cogs = frappe.get_cached_value("Company", COMPANY, "default_expense_account")
+		self.assertEqual(dn.items[0].expense_account, cogs)
+
 	# purchases -----------------------------------------------------------------
 
 	def make_pi(self, item_code, qty, empty_qty="unset", **kwargs):
@@ -327,6 +379,51 @@ class TestEmptiesPosting(FrappeTestCase):
 		self.assertEqual(se.docstatus, 2)
 		(ledger,) = self.get_ledger(pi.name)
 		self.assertEqual(ledger.is_cancelled, 1)
+
+	def test_buying_empties_from_supplier_is_a_normal_purchase(self):
+		before = flt(frappe.db.get_value("Bin", {"item_code": self.empty_jar, "warehouse": WAREHOUSE}, "actual_qty"))
+		pi = self.make_pi(self.empty_jar, 20, update_stock=1)
+
+		after = flt(frappe.db.get_value("Bin", {"item_code": self.empty_jar, "warehouse": WAREHOUSE}, "actual_qty"))
+		self.assertEqual(after - before, 20)
+		self.assertFalse(self.get_stock_entries("purchase_invoice_no", pi.name))
+		self.assertFalse(self.get_ledger(pi.name))
+
+	def test_supplier_shortfall_covered_by_buying_empties(self):
+		self.receive_empties(self.empty_jar, 50, 300)
+		pi = make_purchase_invoice(
+			company=COMPANY,
+			item_code=self.water_jar,
+			qty=10,
+			rate=800,
+			warehouse=WAREHOUSE,
+			uom="Nos",
+			do_not_save=1,
+		)
+		pi.items[0].empty_bottle_qty = 7
+		pi.append(
+			"items",
+			{
+				"item_code": self.empty_jar,
+				"qty": 3,
+				"rate": 300,
+				"uom": "Nos",
+				"stock_uom": "Nos",
+				"conversion_factor": 1,
+				"warehouse": WAREHOUSE,
+				"expense_account": pi.items[0].expense_account,
+				"cost_center": pi.items[0].cost_center,
+			},
+		)
+		pi.insert()
+		pi.submit()
+
+		(se,) = self.get_stock_entries("purchase_invoice_no", pi.name)
+		self.assertEqual(flt(se.items[0].qty), 7)
+		(ledger,) = self.get_ledger(pi.name)
+		self.assertEqual(flt(ledger.out_empty_qty), 7)
+		self.assertEqual(flt(ledger.traded_empty_qty), 3)
+		self.assertEqual(flt(ledger.difference_in_qty), 0)
 
 
 class TestPOSEmptyBottleEntryMeta(FrappeTestCase):

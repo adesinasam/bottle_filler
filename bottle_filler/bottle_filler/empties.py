@@ -163,6 +163,26 @@ def set_sold_empties_expense_account(doc):
 		row.expense_account = cogs
 
 
+def get_traded_empties(doc):
+	"""Empties sold to / bought from the party on this voucher, per empty item.
+
+	These are rows whose item *is* the empty (e.g. a customer short of empties
+	buying empty crates, or empty jars bought from a supplier). Qty is in the
+	empty item's stock UOM.
+	"""
+	traded = {}
+	for row in doc.get("items", []):
+		if row.item_code and is_sold_empty(row):
+			qty = abs(flt(row.get("stock_qty") or flt(row.qty) * (flt(row.conversion_factor) or 1)))
+			traded[row.item_code] = traded.get(row.item_code, 0) + qty
+	return traded
+
+
+def validate_sold_empties(doc, method=None):
+	"""validate hook for Delivery Note / POS Invoice: empties sold go to COGS."""
+	set_sold_empties_expense_account(doc)
+
+
 # ---------------------------------------------------------------------------
 # Stock Entry + ledger
 # ---------------------------------------------------------------------------
@@ -290,7 +310,21 @@ def post_invoice_empties(doc):
 					"project": row.get("project") or doc.get("project"),
 				}
 			)
-		ledger.append((row, warehouse, empties_calc.ledger_quantities(expected, dropped, inward)))
+		ledger.append([row, warehouse, abs(flt(expected)), dropped])
+
+	traded = get_traded_empties(doc)
+	allocated = {}
+	for empty_item in {entry[0].empty_bottle_item_code for entry in ledger}:
+		entries = [entry for entry in ledger if entry[0].empty_bottle_item_code == empty_item]
+		shares = empties_calc.allocate_traded_qty(
+			[expected - dropped for _row, _wh, expected, dropped in entries], traded.get(empty_item, 0)
+		)
+		for entry, share in zip(entries, shares):
+			allocated[entry[0].name] = share
+	ledger = [
+		(row, warehouse, empties_calc.ledger_quantities(expected, dropped, inward, allocated.get(row.name, 0)))
+		for row, warehouse, expected, dropped in ledger
+	]
 
 	se = None
 	if lines:
@@ -354,31 +388,10 @@ def post_pos_sold_empties(doc):
 				"project": row.get("project") or doc.get("project"),
 			}
 		)
-	se = make_stock_entry(doc, purpose, lines, _invoice_link_fields(doc), "Being POS Empty Entry")
-
-	for row, line in zip(rows, lines):
-		qty = line["qty"]
-		make_ledger_entry(
-			item_code=row.item_code,
-			item_name=row.item_name,
-			warehouse=line["warehouse"],
-			posting_date=doc.posting_date,
-			posting_time=doc.posting_time,
-			empty_item_code=row.item_code,
-			empty_item_name=row.item_name,
-			voucher_type=doc.doctype,
-			voucher_no=doc.name,
-			stock_entry_no=se.name,
-			price=flt(row.rate),
-			amount=flt(row.amount),
-			empty_price=flt(row.rate),
-			empty_amount=flt(row.amount),
-			company=doc.company,
-			cost_center=row.get("cost_center"),
-			**empties_calc.ledger_quantities(qty, qty, inward=is_return),
-			**_party_fields(doc),
-		)
-	return se
+	# Selling empties is a sale, not an exchange: it is not written to the
+	# Empty Bottle Entry ledger. Where it covers a customer's shortfall on the
+	# same invoice it is shown as traded_empty_qty on the filled row instead.
+	return make_stock_entry(doc, purpose, lines, _invoice_link_fields(doc), "Being POS Empty Entry")
 
 
 def cancel_invoice_empties(doc):

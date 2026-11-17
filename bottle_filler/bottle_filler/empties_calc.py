@@ -61,25 +61,46 @@ def warehouse_key(voucher_type, is_return=False):
 	return "t_warehouse" if is_inward(voucher_type, is_return) else "s_warehouse"
 
 
-def ledger_quantities(expected_qty, dropped_qty, inward):
+def ledger_quantities(expected_qty, dropped_qty, inward, traded_qty=0):
 	"""Values for an Empty Bottle Entry ledger row.
 
 	* ``actual_qty``        expected empties (from the filled qty)
 	* ``empty_qty``         empties actually exchanged (always positive)
 	* ``in_empty_qty``      empties received into stock
 	* ``out_empty_qty``     empties issued from stock
-	* ``difference_in_qty`` expected - exchanged (positive = shortfall,
+	* ``traded_empty_qty``  empties sold to / bought from the party on the same
+	                        voucher to cover a shortfall
+	* ``difference_in_qty`` expected - exchanged - traded (positive = shortfall,
 	                        negative = party gave/received more than expected)
 	"""
 	expected = abs(_flt(expected_qty))
 	dropped = abs(_flt(dropped_qty))
+	traded = abs(_flt(traded_qty))
 	return {
 		"actual_qty": expected,
 		"empty_qty": dropped,
 		"in_empty_qty": dropped if inward else 0.0,
 		"out_empty_qty": 0.0 if inward else dropped,
-		"difference_in_qty": round(expected - dropped, 9),
+		"traded_empty_qty": traded,
+		"difference_in_qty": round(expected - dropped - traded, 9),
 	}
+
+
+def allocate_traded_qty(shortfalls, traded_qty):
+	"""Spread empties sold/bought on a voucher over the rows that are short.
+
+	``shortfalls``: list of (expected - exchanged) per filled row, in row order,
+	all for the same empty item. Each row gets at most its shortfall; rows that
+	are not short get 0. Whatever is left over (the party bought more empties
+	than it was short) is an ordinary sale/purchase and is not allocated.
+	"""
+	pool = abs(_flt(traded_qty))
+	allocation = []
+	for shortfall in shortfalls:
+		take = min(max(_flt(shortfall), 0.0), pool)
+		allocation.append(round(take, 9))
+		pool = round(pool - take, 9)
+	return allocation
 
 
 def resolve_dropped_qty(entered_qty, expected_qty):

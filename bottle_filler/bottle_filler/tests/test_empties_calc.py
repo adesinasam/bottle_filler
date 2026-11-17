@@ -87,11 +87,30 @@ class TestLedgerQuantities(unittest.TestCase):
 		self.assertEqual(q["in_empty_qty"], 0)
 		self.assertEqual(q["out_empty_qty"], 20)
 
+	def test_traded_empties_reduce_shortfall(self):
+		q = calc.ledger_quantities(10, 6, True, traded_qty=4)
+		self.assertEqual(q["traded_empty_qty"], 4)
+		self.assertEqual(q["difference_in_qty"], 0)
+
 	def test_signs_ignored(self):
 		q = calc.ledger_quantities(-20, -18, inward=False)
 		self.assertEqual(q["actual_qty"], 20)
 		self.assertEqual(q["empty_qty"], 18)
 		self.assertEqual(q["difference_in_qty"], 2)
+
+
+class TestAllocateTradedQty(unittest.TestCase):
+	def test_covers_shortfall_in_row_order(self):
+		self.assertEqual(calc.allocate_traded_qty([4, 3], 5), [4, 1])
+
+	def test_rows_not_short_get_nothing(self):
+		self.assertEqual(calc.allocate_traded_qty([0, -2, 3], 5), [0, 0, 3])
+
+	def test_extra_bought_is_not_allocated(self):
+		self.assertEqual(calc.allocate_traded_qty([2], 10), [2])
+
+	def test_nothing_traded(self):
+		self.assertEqual(calc.allocate_traded_qty([4, 3], 0), [0, 0])
 
 
 if __name__ == "__main__":

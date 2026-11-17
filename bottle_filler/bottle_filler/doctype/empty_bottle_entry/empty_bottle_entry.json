@@ -29,6 +29,7 @@
   "empty_qty",
   "empty_price",
   "empty_amount",
+  "traded_empty_qty",
   "difference_in_qty",
   "in_empty_qty",
   "out_empty_qty",
@@ -267,6 +268,13 @@
    "read_only": 1
   },
   {
+   "description": "Empties sold to / bought from the party on the same voucher to cover a shortfall",
+   "fieldname": "traded_empty_qty",
+   "fieldtype": "Float",
+   "label": "Empties Sold/Bought on Voucher",
+   "read_only": 1
+  },
+  {
    "fieldname": "difference_in_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -352,7 +360,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-11-17 05:00:00.000000",
+ "modified": "2026-11-17 06:30:00.000000",
  "modified_by": "Administrator",
  "module": "Bottle Filler",
  "name": "Empty Bottle Entry",

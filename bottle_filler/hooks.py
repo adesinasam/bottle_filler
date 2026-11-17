@@ -144,6 +144,12 @@ doc_events = {
 		"on_submit": "bottle_filler.bottle_filler.pinvoice.on_submit",
 		"on_cancel": "bottle_filler.bottle_filler.pinvoice.on_cancel",
 	},
+	"Delivery Note": {
+		"validate": "bottle_filler.bottle_filler.empties.validate_sold_empties",
+	},
+	"POS Invoice": {
+		"validate": "bottle_filler.bottle_filler.empties.validate_sold_empties",
+	},
 	"POS Empty Bottle Entry": {
 		"on_submit": "bottle_filler.bottle_filler.posempty.on_submit",
 		"on_cancel": "bottle_filler.bottle_filler.posempty.on_cancel",

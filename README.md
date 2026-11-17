@@ -29,8 +29,14 @@ It tracks returnable empties (RGB bottles, crates, jars) exchanged with customer
 - **Qty (Empty Bottle)** defaults to the expected qty; change it when the party drops more or fewer.
   The difference is kept in the *Empty Bottle Entry* ledger (`difference_in_qty`, positive = shortfall).
 - Empties are valued at the empty item's valuation rate.
-- Selling the empty item itself posts cost of goods sold to the company's
-  **Default Cost of Goods Sold Account**.
+- **Selling empties** (Sales Invoice, Delivery Note, POS Invoice) is an ordinary sale of the empty
+  item; its cost of goods sold goes to the company's **Default Cost of Goods Sold Account**,
+  not the empty item's expense account.
+- **Buying empties** from a supplier (Purchase Invoice / Purchase Receipt) is an ordinary purchase:
+  the empties come into stock at the purchase price and nothing else is posted.
+- If empties are sold to / bought from the party **on the same invoice** as filled items, they cover
+  that party's shortfall: the ledger shows them as `traded_empty_qty` and the difference drops
+  accordingly. Empties bought beyond the shortfall are just a sale/purchase.
 - Cancelling the invoice / POS entry cancels its empties Stock Entry.
 
 ### Tests
